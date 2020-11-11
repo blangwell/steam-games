@@ -3,9 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.24.0/dist/phaser.min.js"></script>
   <title>Math Cannon</title>
-  <script src="./mathCannon.js"></script>
 </head>
 <body>
+  <h1 id="title">Math Cannon</h1>
+  <script>
+
+  const config = {
+    width: 800,
+    height: 600,
+    type: Phaser.AUTO,
+    physics: {
+      default: 'arcade',
+      arcade: {
+        fps: 60,
+        gravity: {y : 0},
+      }
+    },
+  };
+
+  // bind scene to new Scene instance object
+  const scene = new Phaser.Scene('game');
+
+  const game = new Phaser.Game(config);
+
+  // now we create scene functions which run at certain intervals
+  // we are EXTENDING our scene objects via functions (function expression syntax)
+  
+  
+  // init => sets up vars like lives, health, ammo, etc
+  scene.init = function() {
+    
+  }
+  
+  // preload => preloads assets into the game prior to render
+  scene.preload = function() {
+    
+  }
+  
+  // create => loaded once preload has finished, position character, add text etc
+  scene.create = function() {
+    
+  }
+  
+  // update => core function of the game, runs 60x/second used for interaction
+  scene.update = function() {
+    
+  }
+  
+  // end => called once the game is over, ie out of lives, end of level
+  scene.end = function() {
+
+  }
+
+  </script>
 </body>
 </html>
+

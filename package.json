@@ -1,0 +1,22 @@
+{
+  "name": "steam-games",
+  "version": "1.0.0",
+  "description": "This is a repo for the development of Science Tech, Engineering, Art, and Math games via Phaser 3",
+  "main": "mathCannon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blangwell/steam-games.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blangwell/steam-games/issues"
+  },
+  "homepage": "https://github.com/blangwell/steam-games#readme",
+  "dependencies": {
+    "http-server": "^0.12.3"
+  }
+}

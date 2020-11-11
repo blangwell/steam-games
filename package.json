@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/blangwell/steam-games#readme",
   "dependencies": {
-    "http-server": "^0.12.3"
+    "http-server": "^0.12.3",
+    "phaser": "^3.24.1"
   }
 }

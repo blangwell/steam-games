@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="//cdn.jsdelivr.net/npm/phaser@3.24.0/dist/phaser.min.js"></script>
+  <link rel="stylesheet" href="assets/style.css">
   <title>Math Cannon</title>
 </head>
+
 <body>
   <h1 id="title">Math Cannon</h1>
   <script>
@@ -17,13 +19,13 @@
     width: 800,
     height: 600,
     type: Phaser.AUTO,
-    physics: {
-      default: 'arcade',
-      arcade: {
-        fps: 60,
-        gravity: {y : 0},
-      }
-    },
+    // physics: {
+    //   default: 'arcade',
+    //   arcade: {
+    //     fps: 60,
+    //     gravity: {y : 0},
+    //   }
+    // },
     scene: scene
   };
 
@@ -47,21 +49,43 @@
     this.load.image('background', 'assets/space-bg.jpg')
     this.load.image('crosshair', 'assets/crossair_blueOutline.png')
   }
+
   
   // create => loaded once preload has finished, position character, add text etc
+  let ch;
+  
   scene.create = function() {
     let bg = this.add.sprite(0, 0, 'background');
     bg.setOrigin(0, 0);
 
-    let ch = this.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height/2, 'crosshair')
+    
+    ch = this.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height/2, 'crosshair')
+    
+    // this.input.setDefaultCursor('url(/assets/crosshair_blueOutline.cur), pointer');
+    // this.sys.canvas.style.cursor = 'crosshair';
 
     // add.text(x, y, 'text', {styling object props})
     this.scoreText = this.add.text(16, 16, 'score : '+ this.score, {fontSize: '20px', fill: '#fff'})
     this.liveText = this.add.text(16, this.sys.game.config.height-50, 'Lives : ' + this.lives, {fontSize: '20px', fill: '#fff'})
+
   }
   
+  
   // update => core function of the game, runs 60x/second used for interaction
+  let cursors;
+
   scene.update = function() {
+    cursors = this.input.keyboard.createCursorKeys();
+
+    if (cursors.left.isDown) {
+      ch.x -= 10;
+    } else if (cursors.right.isDown) {
+      ch.x += 10;
+    } else if (cursors.up.isDown) {
+      ch.y -= 10;
+    } else if (cursors.down.isDown) {
+      ch.y += 10;
+    }
     
   }
   

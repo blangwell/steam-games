@@ -5,8 +5,7 @@ app.use(express.static(__dirname + '/public'))
 
 app.get('/', (req, res) => {
   // __dirname is an environment var that gets dir
-  // the current file is within, sendFile sends an
-  // entire static file
+  // the current file is within, sendFile sends an entire static file
   res.sendFile(__dirname + '/index.html')
 
 })

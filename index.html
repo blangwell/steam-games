@@ -77,26 +77,15 @@
   scene.update = function() {
     cursors = this.input.keyboard.createCursorKeys();
 
-    if (cursors.left.isDown && cursors.up.isDown) ch.x, ch.y -= 10;
-    else if (cursors.left.isDown && cursors.down.isDown) {
+    if (cursors.left.isDown) {
       ch.x -= 10;
+    } if (cursors.right.isDown) {
+      ch.x += 10;
+    } if (cursors.up.isDown) {
+      ch.y -= 10;
+    } if (cursors.down.isDown) {
       ch.y += 10;
     }
-    else if (cursors.right.isDown && cursors.down.isDown) ch.x, ch.y += 10;
-    else if (cursors.right.isDown && cursors.up.isDown) {
-      ch.x += 10;
-      ch.y -= 10;
-    }
-    else if (cursors.left.isDown) {
-      ch.x -= 10;
-    } else if (cursors.right.isDown) {
-      ch.x += 10;
-    } else if (cursors.up.isDown) {
-      ch.y -= 10;
-    } else if (cursors.down.isDown) {
-      ch.y += 10;
-    }
-    
   }
   
   // end => called once the game is over, ie out of lives, end of level

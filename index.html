@@ -37,6 +37,7 @@
   // init => sets up vars like lives, health, ammo, etc
   scene.init = function() {
     this.score = 0;
+    this.lives = 3;
     this.scoreText;
     
   }
@@ -44,7 +45,7 @@
   // preload => preloads assets into the game prior to render
   scene.preload = function() {
     this.load.image('background', 'assets/space-bg.jpg')
-    
+    this.load.image('crosshair', 'assets/crossair_blueOutline.png')
   }
   
   // create => loaded once preload has finished, position character, add text etc
@@ -52,8 +53,11 @@
     let bg = this.add.sprite(0, 0, 'background');
     bg.setOrigin(0, 0);
 
-    this.scoreText = this.add.text(100, 16, 'score : '+this.score, {fontSize: '20px', fill: '#fff'})
-    
+    let ch = this.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height/2, 'crosshair')
+
+    // add.text(x, y, 'text', {styling object props})
+    this.scoreText = this.add.text(16, 16, 'score : '+ this.score, {fontSize: '20px', fill: '#fff'})
+    this.liveText = this.add.text(16, this.sys.game.config.height-50, 'Lives : ' + this.lives, {fontSize: '20px', fill: '#fff'})
   }
   
   // update => core function of the game, runs 60x/second used for interaction

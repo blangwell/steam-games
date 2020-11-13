@@ -29,8 +29,7 @@
         scene: spaceScene
       };
       
-      
-      const game = new Phaser.Game(config);
+  const game = new Phaser.Game(config);
 
   // we are EXTENDING our scene objects via functions (function expression syntax)
   // now we create scene functions which run at certain intervals
@@ -60,8 +59,10 @@
     let bg = this.add.sprite(0, 0, 'background');
     bg.setOrigin(0, 0);
 
-    this.ch = this.add.sprite(config.width/2, config.height/2, 'crosshair')
-    this.laser = this.add.sprite(config.width/2, config.height , 'laser')
+    ch = this.physics.add.sprite(config.width/2, config.height/2, 'crosshair')
+    ch.body.setCollideWorldBounds(true)
+
+    laser = this.add.sprite(config.width/2, config.height , 'laser')
 
     // remember this.setScale
 
@@ -88,15 +89,15 @@
   // update => core function of the game, runs 60x/second used for interaction
   spaceScene.update = function() {
 
-    // this.fireLasers(this.laser, 20)
+    // this.fireLasers(laser, 20)
 
     cursors = this.input.keyboard.createCursorKeys();
 
     // player movement
-    if (cursors.left.isDown) this.ch.x -= 10;
-    if (cursors.right.isDown) this.ch.x += 10;
-    if (cursors.up.isDown) this.ch.y -= 10;
-    if (cursors.down.isDown) this.ch.y += 10;
+    if (cursors.left.isDown) ch.x -= 10;
+    if (cursors.right.isDown) ch.x += 10;
+    if (cursors.up.isDown) ch.y -= 10;
+    if (cursors.down.isDown) ch.y += 10;
 
     if (cursors.space.isDown) {
       this.sound.play('laserSound')

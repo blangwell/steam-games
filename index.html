@@ -13,20 +13,20 @@
   <script>
     
   // bind scene to new Scene instance object
-  const scene = new Phaser.Scene('game');
+  const spaceScene = new Phaser.Scene('game');
   
   const config = {
     width: 800,
     height: 600,
     type: Phaser.AUTO,
-    // physics: {
-      //   default: 'arcade',
-      //   arcade: {
-        //     fps: 60,
-        //     gravity: {y : 0},
-        //   }
-        // },
-        scene: scene
+    physics: {
+        default: 'arcade',
+        arcade: {
+            fps: 60,
+            gravity: {y : 0},
+          }
+        },
+        scene: spaceScene
       };
       
       
@@ -36,7 +36,7 @@
   // now we create scene functions which run at certain intervals
 
   // init => sets up vars like lives, health, ammo, etc
-  scene.init = function() {
+  spaceScene.init = function() {
     this.score = 0;
     this.lives = 3;
     this.scoreText;
@@ -45,7 +45,7 @@
   }
   
   // preload => preloads assets into the game prior to render
-  scene.preload = function() {
+  spaceScene.preload = function() {
     this.load.image('background', 'assets/img/space-bg.jpg')
     this.load.image('crosshair', 'assets/img/crossair_blueOutline.png')
     this.load.image('laser', 'assets/img/laserGreen03.png')
@@ -56,13 +56,14 @@
   let ch;
   let laser;
 
-  scene.create = function() {
+  spaceScene.create = function() {
     let bg = this.add.sprite(0, 0, 'background');
     bg.setOrigin(0, 0);
 
-    ch = this.add.sprite(config.width/2, config.height/2, 'crosshair')
-    laser = this.add.sprite(config.width/2, config.height , 'laser')
+    this.ch = this.add.sprite(config.width/2, config.height/2, 'crosshair')
+    this.laser = this.add.sprite(config.width/2, config.height , 'laser')
 
+    // remember this.setScale
 
     // add.text(x, y, 'text', {styling object props})
     this.scoreText = this.add.text(16, 16, 'score : '+ this.score, {fontSize: '20px', fill: '#fff'})
@@ -70,24 +71,32 @@
 
   }
   
-  // let fireLasers = function(laser, speed) {
-  //   while (laser.y > 0) {
-  //     this.laser.anims.play('laser')
+  spaceScene.resetLasers = function (laser) {
+    laser.y = config.height
+  }
 
-  //   }
-  // }
+  spaceScene.fireLasers = function (laser, speed) {
+    laser.y -= speed;
+    if (laser.y < 0) {
+      this.resetLasers(laser)
+    }
+  }
 
-  // update => core function of the game, runs 60x/second used for interaction
+
   let cursors;
+  
+  // update => core function of the game, runs 60x/second used for interaction
+  spaceScene.update = function() {
 
-  scene.update = function() {
+    // this.fireLasers(this.laser, 20)
+
     cursors = this.input.keyboard.createCursorKeys();
 
     // player movement
-    if (cursors.left.isDown) ch.x -= 10;
-    if (cursors.right.isDown) ch.x += 10;
-    if (cursors.up.isDown) ch.y -= 10;
-    if (cursors.down.isDown) ch.y += 10;
+    if (cursors.left.isDown) this.ch.x -= 10;
+    if (cursors.right.isDown) this.ch.x += 10;
+    if (cursors.up.isDown) this.ch.y -= 10;
+    if (cursors.down.isDown) this.ch.y += 10;
 
     if (cursors.space.isDown) {
       this.sound.play('laserSound')
@@ -96,7 +105,7 @@
   }
   
   // end => called once the game is over, ie out of lives, end of level
-  scene.end = function() {
+  spaceScene.end = function() {
 
   }
 

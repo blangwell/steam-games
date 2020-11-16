@@ -36,6 +36,12 @@
         visible: false,
         key: 'laser'
       })
+
+    }
+
+    fireLaser(x, y) {
+      const laser = this.getFirstDead(false);
+      if (laser) laser.fire(x, y)
     }
   }
 
@@ -81,24 +87,34 @@
   // create => loaded once preload has finished, position character, add text etc
   let ch;
   // let laser;
-  let laserGroup
 
   spaceScene.create = function() {
     this.laserGroup = new LaserGroup(this);
     let bg = this.add.sprite(0, 0, 'background');
     bg.setOrigin(0, 0);
 
-    ch = this.physics.add.sprite(config.width/2, config.height/2, 'crosshair')
-    ch.body.setCollideWorldBounds(true)
+    this.ch = this.physics.add.sprite(config.width/2, config.height/2, 'crosshair')
+    this.ch.body.setCollideWorldBounds(true)
 
-    // laser = this.physics.add.sprite(config.width/2, config.height , 'laser')
+    this.laser = this.physics.add.sprite(config.width/2, config.height , 'laser')
 
-    this.anims.create({
-      key: 'laserAnim',
-      frames: this.anims.generateFrameNumbers('laser'),
-      frameRate: 20, 
-      repeat: -1
+
+    this.input.on('pointermove', pointer => {
+      this.ch.x = pointer.x
+      this.ch.y = pointer.y
     })
+    this.input.on('pointerdown', pointer => {
+      // start shooting
+      this.laserGroup.fireLaser(this.ch.x, this.ch.y - 20);
+      this.sound.play('laserSound')
+    })
+
+    // this.anims.create({
+    //   key: 'laserAnim',
+    //   frames: this.anims.generateFrameNumbers('laser'),
+    //   frameRate: 20, 
+    //   repeat: -1
+    // })
 
     // remember this.setScale
 
@@ -107,51 +123,21 @@
     this.liveText = this.add.text(16, config.height-50, 'Lives : ' + this.lives, {fontSize: '20px', fill: '#fff'})
   }
 
-  function addEvents() {
-    this.input.on('pointermove', pointer => {
-      ch.x = pointer.x
-    })
-    this.input.on('pointerdown', pointer => {
-
-    })
-  }
-  
-  // function resetLasers (laser) {
-  //   laser.y = config.height
-  // }
-
-  // function fireLasers (laser, speed) {
-  //   laser.x = ch.x;
-  //   laser.y -= speed;
-    
-  //   if (laser.y < ch.y + ch.height/2) {
-  //     this.resetLasers(laser)
-  //   }
-  // }
-  function fireLasers (x, y) {
-    const laser = this.getFirstDead(false);
-    if (laser) {
-      laser.fire(x, y);
-    }
-  }
-
-
-  let cursors;
   
   // update => core function of the game, runs 60x/second used for interaction
   spaceScene.update = function() {
 
     // fireLasers(laser, 20)
 
-    cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.createCursorKeys();
 
     // player movement
-    if (cursors.left.isDown) ch.x -= 10;
-    if (cursors.right.isDown) ch.x += 10;
-    if (cursors.up.isDown) ch.y -= 10;
-    if (cursors.down.isDown) ch.y += 10;
+    if (this.cursors.left.isDown) this.ch.x -= 10;
+    if (this.cursors.right.isDown) this.ch.x += 10;
+    if (this.cursors.up.isDown) this.ch.y -= 10;
+    if (this.cursors.down.isDown) this.ch.y += 10;
 
-    if (cursors.space.isDown) {
+    if (this.cursors.space.isDown) {
       this.sound.play('laserSound')
     } 
     

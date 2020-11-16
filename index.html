@@ -14,14 +14,15 @@
 
   class Laser extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-      super(scene, x, y, 'laser')
+      super(scene, x, y, 'laser');
     }
 
     fire(x, y) {
       this.body.reset(x, y);
       this.setActive(true);
       this.setVisible(true);
-      this.setVelocity(-900);
+      this.setVelocity(-100);
+
     }
   }
   
@@ -33,120 +34,96 @@
         classType: Laser,
         frameQuantity: 30,
         active: false,
-        visible: false,
+        visible: true,
         key: 'laser'
       })
-
     }
 
     fireLaser(x, y) {
-      const laser = this.getFirstDead(false);
+      const laser = this.getFirstDead(true);
       if (laser) laser.fire(x, y)
     }
   }
-
-  // bind scene to new Scene instance object
-  const spaceScene = new Phaser.Scene('game');
   
+  class SpaceScene extends Phaser.Scene {
+    constructor() {
+      super()
+
+      this.score = 0;
+      this.lives = 3;
+      this.scoreText;
+      this.equation;
+      this.ch;
+      this.bg;
+    }
+    
+    // preload => preloads assets into the game prior to render
+    preload() {
+      this.load.image('background', 'assets/img/space-bg.jpg')
+      this.load.image('crosshair', 'assets/img/crossair_blueOutline.png')
+      this.load.image('laser', 'assets/img/laserGreen03.png')
+      this.load.audio('laserSound', 'assets/sounds/laser1.ogg')
+    }
+    
+    // create => loaded once preload has finished, position character, add text etc
+    create() {
+      this.laserGroup = new LaserGroup(this);
+      this.bg = this.add.sprite(0, 0, 'background');
+      this.bg.setOrigin(0, 0);
+      
+      this.ch = this.physics.add.sprite(config.width/2, config.height/2, 'crosshair')
+      this.ch.body.setCollideWorldBounds(true)
+      
+      // this.laser = this.physics.add.sprite(config.width/2, config.height , 'laser')
+      
+      
+      this.input.on('pointermove', pointer => {
+        this.ch.x = pointer.x
+        this.ch.y = pointer.y
+      })
+      this.input.on('pointerdown', pointer => {
+        // start shooting
+        this.laserGroup.fireLaser(this.ch.x, this.ch.y - 20);
+        this.sound.play('laserSound')
+      })
+      
+      // add.text(x, y, 'text', {styling object props})
+      this.scoreText = this.add.text(16, 16, 'score : '+ this.score, {fontSize: '20px', fill: '#fff'})
+      this.liveText = this.add.text(16, config.height-50, 'Lives : ' + this.lives, {fontSize: '20px', fill: '#fff'})
+    }
+              // update => core function of the game, runs 60x/second used for interaction
+    update() {
+      this.cursors = this.input.keyboard.createCursorKeys();
+      
+      // player movement 
+      if (this.cursors.left.isDown) this.ch.x -= 10;
+      if (this.cursors.right.isDown) this.ch.x += 10;
+      if (this.cursors.up.isDown) this.ch.y -= 10;
+      if (this.cursors.down.isDown) this.ch.y += 10;
+      
+    }
+              
+    // end => called once the game is over, ie out of lives, end of level
+    end() {
+      
+    }
+  }
+              
   const config = {
     width: 800,
     height: 600,
     type: Phaser.AUTO,
     physics: {
-        default: 'arcade',
-        arcade: {
-            fps: 60,
-            gravity: {y : 0},
-          }
-        },
-        scene: spaceScene
-      };
+      default: 'arcade',
+      arcade: {
+        fps: 60,
+        gravity: {y : 0},
+      }
+    },
+    scene: SpaceScene
+  };
       
   const game = new Phaser.Game(config);
-
-  // we are EXTENDING our scene objects via functions (function expression syntax)
-  // now we create scene functions which run at certain intervals
-
-  // init => sets up vars like lives, health, ammo, etc
-  spaceScene.init = function() {
-    this.score = 0;
-    this.lives = 3;
-    this.scoreText;
-    this.equation;
-    
-  }
-  
-  // preload => preloads assets into the game prior to render
-  spaceScene.preload = function() {
-    this.load.image('background', 'assets/img/space-bg.jpg')
-    this.load.image('crosshair', 'assets/img/crossair_blueOutline.png')
-    this.load.image('laser', 'assets/img/laserGreen03.png')
-    this.load.audio('laserSound', 'assets/sounds/laser1.ogg')
-  }
-  
-  // create => loaded once preload has finished, position character, add text etc
-  let ch;
-  // let laser;
-
-  spaceScene.create = function() {
-    this.laserGroup = new LaserGroup(this);
-    let bg = this.add.sprite(0, 0, 'background');
-    bg.setOrigin(0, 0);
-
-    this.ch = this.physics.add.sprite(config.width/2, config.height/2, 'crosshair')
-    this.ch.body.setCollideWorldBounds(true)
-
-    this.laser = this.physics.add.sprite(config.width/2, config.height , 'laser')
-
-
-    this.input.on('pointermove', pointer => {
-      this.ch.x = pointer.x
-      this.ch.y = pointer.y
-    })
-    this.input.on('pointerdown', pointer => {
-      // start shooting
-      this.laserGroup.fireLaser(this.ch.x, this.ch.y - 20);
-      this.sound.play('laserSound')
-    })
-
-    // this.anims.create({
-    //   key: 'laserAnim',
-    //   frames: this.anims.generateFrameNumbers('laser'),
-    //   frameRate: 20, 
-    //   repeat: -1
-    // })
-
-    // remember this.setScale
-
-    // add.text(x, y, 'text', {styling object props})
-    this.scoreText = this.add.text(16, 16, 'score : '+ this.score, {fontSize: '20px', fill: '#fff'})
-    this.liveText = this.add.text(16, config.height-50, 'Lives : ' + this.lives, {fontSize: '20px', fill: '#fff'})
-  }
-
-  
-  // update => core function of the game, runs 60x/second used for interaction
-  spaceScene.update = function() {
-
-    // fireLasers(laser, 20)
-
-    this.cursors = this.input.keyboard.createCursorKeys();
-
-    // player movement
-    if (this.cursors.left.isDown) this.ch.x -= 10;
-    if (this.cursors.right.isDown) this.ch.x += 10;
-    if (this.cursors.up.isDown) this.ch.y -= 10;
-    if (this.cursors.down.isDown) this.ch.y += 10;
-
-    if (this.cursors.space.isDown) {
-      this.sound.play('laserSound')
-    } 
-    
-  }
-  
-  // end => called once the game is over, ie out of lives, end of level
-  spaceScene.end = function() {
-
-  }
 
   </script>
 </body>

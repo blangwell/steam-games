@@ -44,6 +44,9 @@ const config = {
     
 const game = new Phaser.Game(config);
 
+
+
+
 // we are EXTENDING our scene objects via functions (function expression syntax)
 // now we create scene functions which run at certain intervals
 

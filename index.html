@@ -27,7 +27,7 @@
     preUpdate(time, delta) {
       super.preUpdate(time, delta);
 
-      if (this.y < game.input.mousePointer.y + this.height) {
+      if (this.y < this.scene.ch.y + this.height) {
         this.setActive(false);
         this.setVisible(false);
       }
@@ -83,21 +83,21 @@
       this.ch = this.physics.add.sprite(config.width/2, config.height/2, 'crosshair')
       this.ch.body.setCollideWorldBounds(true)
       
-      // this.laser = this.physics.add.sprite(config.width/2, config.height , 'laser')
-      this.laserGroup = new LaserGroup(this);
+      this.scoreText = this.add.text(16, 16, 'score : '+ this.score, {fontSize: '20px', fill: '#fff'})
+      this.liveText = this.add.text(16, config.height-50, 'Lives : ' + this.lives, {fontSize: '20px', fill: '#fff'})
       
+      this.laserGroup = new LaserGroup(this);
       
       this.input.on('pointermove', pointer => {
         this.ch.x = pointer.x
         this.ch.y = pointer.y
       })
+      
       this.input.on('pointerdown', pointer => {
         this.laserGroup.fireLaser(this.ch.x, config.height);
         this.sound.play('laserSound')
       })
       
-      this.scoreText = this.add.text(16, 16, 'score : '+ this.score, {fontSize: '20px', fill: '#fff'})
-      this.liveText = this.add.text(16, config.height-50, 'Lives : ' + this.lives, {fontSize: '20px', fill: '#fff'})
     }
 
     // update => core function of the game, runs 60x/second used for interaction
